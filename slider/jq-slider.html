@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>jq-slider</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    
+    <style>       
+        @font-face {
+          font-family: 'iconfont';
+          src: url('../font/font-arrow/iconfont.eot');
+          src: url('../font/font-arrow/iconfont.eot?#iefix') format('embedded-opentype'),
+          url('../font/font-arrow/iconfont.woff') format('woff'),
+          url('../font/font-arrow/iconfont.ttf') format('truetype'),
+          url('../font/font-arrow/iconfont.svg#iconfont') format('svg');
+        }
+
+        .iconfont{
+          font-family:"iconfont" !important;
+          font-size:20px;font-style:normal;
+          -webkit-font-smoothing: antialiased;
+          -webkit-text-stroke-width: 0.2px;
+          -moz-osx-font-smoothing: grayscale;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .wrapper {
+            width: 100%;
+            margin-top: 35px;
+        }
+
+        .slider-box {
+            position: relative;
+            margin: 0 auto;
+            height: 400px;
+            width: 750px;
+        }
+
+
+        .limg img {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .nav-box {
+            bottom: 10px;
+            left: 350px;
+            position: absolute;
+            width: 100px;
+        }
+
+        .nav-box li {
+            float: left;
+            width: 13px;
+            height: 13px;
+            background-color: #e4e4e4;
+            border-radius: 50%;
+            margin: 0 5px;
+        }
+
+        .nav-box .active {
+            background-color: #ff5000;
+        }
+
+        .arrow {
+            position: absolute;
+            top: 180px;
+            width: 30px;
+            height: 60px;
+            background-color: rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .arrow .iconfont{
+            display: block;
+            color:#fff;
+            width:100%;
+            line-height: 60px;
+            cursor: pointer;
+        }
+
+        .arrow .iconfont:active{
+           margin-top:1px;
+        }
+
+        .arrow-right {
+            right: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="slider-box">
+            <ul class="img-box">
+                <li class="limg">
+                    <img src="./img/1.jpg" alt="">
+                </li>
+                <li class="limg">
+                    <img src="./img/2.jpg" alt="">
+                </li>
+                <li class="limg">
+                    <img src="./img/3.jpg" alt="">
+                </li>
+            </ul>
+
+
+            <ul class="nav-box">
+                <li class="active"></li>
+                <li></li>
+                <li></li>
+            </ul>
+
+            <div class="arrow arrow-left">
+                <i class="iconfont">&#xe697;</i>
+            </div>
+            <div class="arrow arrow-right">
+                <i class="iconfont">&#xe6a7;</i>
+            </div>
+
+        </div>
+
+
+</body>
+<script>
+    $(function () {
+        var i = 0;
+        var time;
+        $('.limg').eq(0).show().siblings().hide();
+        showTime()
+
+        $('.nav-box').children().hover(function () {
+            clearInterval(time);
+            i = $(this).index();
+            show();
+        }, function () {
+            showTime();
+        })
+
+        $('.arrow-left').on({
+            click: function () {
+                if (i == 0) {
+                    i = 3;
+                }
+                i--;
+                show();
+            },
+            mouseover : function(){
+                clearInterval(time)
+            },
+            mouseout : function(){
+                showTime();
+            }
+        })
+
+        $('.arrow-right').on({
+            click: function () {
+                console.log(i)
+                if (i == 2) {
+                    i = -1;
+                }
+                i++;
+                show();
+            },
+            mouseover : function(){
+                clearInterval(time)
+            },
+            mouseout : function(){
+                showTime();
+            }
+        })
+
+
+        function showTime() {
+            time = setInterval(function () {
+                if (i == 3) {
+                    i = 0;
+                }
+                show();
+                i++
+            }, 2000)
+        }
+
+        function show() {
+            $('.limg').eq(i).fadeIn(500).siblings().fadeOut(500);
+            $('.nav-box').children().eq(i).addClass('active').siblings().removeClass();
+        }
+
+    })
+</script>
+
+</html>

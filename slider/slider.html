@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>原生js轮播</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .wrapper {
+            width: 100%;
+            margin-top: 35px;
+        }
+
+        .slider-box {
+            margin: 0 auto;
+            border: 1px solid black;
+            height: 400px;
+            width: 750px;
+            overflow: hidden;
+            /* slider窗口 */
+            position: relative;
+        }
+
+        .img-box {
+            position: relative;
+            width: 3000px;
+            /** 图片集宽度 = 单个图片*4 **/
+            height: 400px;
+        }
+
+        .img-box li {
+            width: 750px;
+            height: 100%;
+            float: left;
+        }
+
+        .img-box li a {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .img-box li a img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .nav-box {
+            position: absolute;
+            left: 42%;
+            bottom: 2%
+        }
+
+        .nav-box ul::after {
+            content: "";
+            display: block;
+            clear: both;
+        }
+
+        .nav-box ul li {
+            float: left;
+            width: 13px;
+            height: 13px;
+            background-color: #e4e4e4;
+            border-radius: 50%;
+            margin: 0 10px;
+            overflow: hidden;
+        }
+
+        .nav-box ul li a {
+            width: 100%;
+            height: 100%;
+            display: block;
+
+        }
+        .active {
+            background-color: #ff5000;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="slider-box">
+            <ul class="img-box" style="left:0;">
+                <li>
+                    <a href="javascript:0;">
+                        <img src="./img/1.jpg" alt="">
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:0;">
+                        <img src="./img/2.jpg" alt="">
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:0;">
+                        <img src="./img/3.jpg" alt="">
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:0;">
+                        <img src="./img/1.jpg" alt="">
+                    </a>
+                </li>
+            </ul>
+            <div class="nav-box">
+                <ul>
+                    <li>
+                        <a class="nav-dot active" href="javascript:0;" data-dot="0"></a>
+                    </li>
+                    <li>
+                        <a class="nav-dot" href="javascript:0;" data-dot="1"></a>
+                    </li>
+                    <li>
+                        <a class="nav-dot" href="javascript:0;" data-dot="2"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    var img_box = document.getElementsByClassName('img-box')[0]
+    var innertime;
+    function move() {
+        // console.log(img_box.style.left)
+        img_box.style.left = parseInt(img_box.style.left) - 750 + 'px';
+        img_box.style.transition = 'left 1s'
+
+        // console.log(img_box.style.left)
+        if (parseInt(img_box.style.left) <= '-2250') {
+            
+            innertime = setTimeout(function () {      //开启定时器，无缝衔接
+                img_box.style.left = 0;
+                img_box.style.transition = 'left 0s'
+                
+            }, 1000)
+        }
+        
+        var left2dot = -parseInt(img_box.style.left) / 750;  
+        var dot_length = nav_dot.length;
+        //移动导航点
+        for(var j = 0; j < dot_length; j++){
+            for(var k = 0; k < dot_length; k++){
+                nav_dot[k].classList.remove('active')
+            }
+            if(nav_dot[j].getAttribute('data-dot') == left2dot || nav_dot[j].getAttribute('data-dot') + 3 == left2dot){ //+3 匹配最后一个图
+                nav_dot[j].classList.add('active');
+                break;
+            }
+           
+        }
+
+    }
+
+    var time = setInterval(move, 2000)
+
+    var nav_dot = document.getElementsByClassName('nav-dot');
+
+    for (var i = 0; i < nav_dot.length; i++) {
+        nav_dot[i].onclick = function () {
+            clearTimeout(innertime)                //清除定时器  *：必须先声明
+            clearInterval(time)                  //停止计时
+            var data_dot = this.getAttribute('data-dot')
+            var length = nav_dot.length;
+            for(var j = 0; j < length; j++){
+                nav_dot[j].classList.remove('active')   //移除所有类名为 active
+            }
+            this.classList.add('active')   //  增加类active
+            img_box.style.left = data_dot * -750 + 'px';
+            img_box.style.transition = 'left 1s'
+            time = setInterval(move,2000)    //开启计时
+        }
+    }
+
+</script>
+
+</html>
